@@ -1,1 +1,757 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jornal do Norte Bahiano — A Verdade do Povo</title>
+<meta name="description" content="Jornal online do Norte da Bahia e Vale do São Francisco.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Lato',sans-serif;background:#eee;color:#222;}
+a{text-decoration:none;color:inherit;}
+img{max-width:100%;display:block;}
+
+/* MENU LATERAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:200;display:none;}
+.overlay.open{display:block;}
+.sidemenu{position:fixed;top:0;left:-290px;width:280px;height:100%;background:#fff;z-index:300;transition:left .3s;overflow-y:auto;box-shadow:4px 0 24px rgba(0,0,0,.2);}
+.sidemenu.open{left:0;}
+.mh{display:flex;align-items:center;justify-content:space-between;padding:14px;border-bottom:3px solid #ffd54f;background:#0a3d8f;}
+.mh-logo{font-family:'Oswald',sans-serif;font-size:14px;font-weight:700;color:#fff;line-height:1.2;}
+.mh-logo small{display:block;font-size:9px;color:#ffd54f;letter-spacing:2px;margin-top:2px;}
+.mh-x{background:none;border:none;font-size:26px;cursor:pointer;color:#ffd54f;}
+.ms{margin:10px 12px;display:flex;align-items:center;background:#f5f5f5;border-radius:6px;padding:8px 12px;gap:8px;}
+.ms input{border:none;background:transparent;font-size:13px;flex:1;outline:none;}
+.mnav{list-style:none;}
+.mnav li{border-bottom:.5px solid #eee;}
+.mnav li a{display:flex;justify-content:space-between;padding:13px 18px;font-size:15px;font-weight:700;color:#333;transition:all .2s;}
+.mnav li a:hover{background:#f0f5ff;color:#0a3d8f;padding-left:22px;}
+.mnav li a.red{color:#c62828;}
+.msoc{display:flex;gap:18px;padding:16px 18px;border-top:1px solid #eee;}
+.msoc a{color:#555;font-size:22px;}
+
+/* HEADER */
+header{background:#0a3d8f;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.3);}
+.topbar{background:#c62828;display:flex;justify-content:space-between;align-items:center;padding:4px 14px;font-size:10px;color:#fff;}
+.topbar .ts a{color:#ffd54f;margin-left:10px;font-size:14px;vertical-align:middle;}
+.hbar{display:flex;align-items:center;padding:10px 14px;gap:10px;}
+.hbtn{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;gap:5px;padding:5px;flex-shrink:0;}
+.hbtn span{display:block;width:22px;height:2.5px;background:#ffd54f;border-radius:2px;}
+.logo{flex:1;text-align:center;}
+.logo h1{font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;color:#fff;letter-spacing:1px;line-height:1;}
+.logo p{font-size:8px;color:#ffd54f;letter-spacing:2px;text-transform:uppercase;border-top:1px solid rgba(255,213,74,.4);border-bottom:1px solid rgba(255,213,74,.4);padding:2px 0;margin-top:3px;display:inline-block;}
+.hicons{display:flex;gap:10px;}
+.hicons a{color:#ffd54f;font-size:19px;}
+.hnav{background:#1565c0;border-top:3px solid #ffd54f;display:flex;overflow-x:auto;scrollbar-width:none;}
+.hnav::-webkit-scrollbar{display:none;}
+.hnav a{color:#fff;padding:7px 13px;font-size:10px;font-weight:700;white-space:nowrap;text-transform:uppercase;border-right:1px solid rgba(255,255,255,.12);letter-spacing:.5px;transition:background .2s;}
+.hnav a.on,.hnav a:hover{background:#ffd54f;color:#0a3d8f;}
+
+/* BREAKING */
+.brk{background:#c62828;display:flex;align-items:center;overflow:hidden;}
+.blab{background:#ffd54f;color:#c62828;font-weight:700;font-size:10px;padding:6px 12px;white-space:nowrap;letter-spacing:1px;flex-shrink:0;}
+.tkw{flex:1;overflow:hidden;padding:0 12px;}
+.tk{display:flex;animation:tk 28s linear infinite;white-space:nowrap;}
+.tk span{color:#fff;font-size:11px;padding-right:60px;}
+@keyframes tk{0%{transform:translateX(100%)}100%{transform:translateX(-300%)}}
+
+/* SLIDER */
+.slwrap{background:#0a3d8f;padding:10px 14px 0;}
+.slbox{position:relative;overflow:hidden;border-radius:10px;}
+.sld{display:none;position:relative;}
+.sld.on{display:block;}
+.slbg{height:195px;display:flex;align-items:center;justify-content:center;}
+.slover{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.85));padding:28px 14px 12px;}
+.slcat{background:#c62828;color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:3px;letter-spacing:1px;display:inline-block;margin-bottom:5px;}
+.slover h2{font-family:'Oswald',sans-serif;font-size:16px;color:#fff;line-height:1.3;}
+.slover small{font-size:11px;color:rgba(255,255,255,.7);margin-top:3px;display:block;}
+.slbadge{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.5);color:#ffd54f;font-size:9px;font-weight:700;padding:3px 8px;border-radius:10px;}
+.slnav{display:flex;gap:6px;justify-content:center;padding:9px 0 11px;}
+.sldot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.35);cursor:pointer;transition:all .2s;}
+.sldot.on{background:#ffd54f;width:22px;border-radius:4px;}
+.slarr{position:absolute;top:50%;transform:translateY(-50%);width:100%;display:flex;justify-content:space-between;padding:0 8px;pointer-events:none;}
+.sarr{background:rgba(0,0,0,.45);color:#fff;border:none;width:28px;height:28px;border-radius:50%;font-size:15px;cursor:pointer;pointer-events:all;display:flex;align-items:center;justify-content:center;}
+
+/* ===== BANNER PUBLICITÁRIO TOPO — DESTAQUE MÁXIMO ===== */
+.adtopo{margin:12px 14px;border-radius:10px;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.2);cursor:pointer;transition:transform .2s,box-shadow .2s;}
+.adtopo:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,.25);}
+.adtopo-inner{background:linear-gradient(135deg,#0f1923 0%,#1a1a2e 40%,#0f3460 100%);padding:16px;text-align:center;border:2px solid #ffd54f;border-radius:10px;position:relative;overflow:hidden;}
+.adtopo-inner::before{content:'PUBLICIDADE';position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:8px;color:rgba(255,213,74,.5);letter-spacing:3px;font-weight:700;}
+.adtopo-inner::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:300px;background:radial-gradient(circle,rgba(255,213,74,.05) 0%,transparent 70%);pointer-events:none;}
+.adbig{font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;color:#fff;display:block;margin:8px 0 4px;letter-spacing:.5px;}
+.adsub{font-size:11px;color:rgba(255,255,255,.6);display:block;margin-bottom:8px;}
+.adbtn{display:inline-flex;align-items:center;gap:6px;background:#ffd54f;color:#1a1a2e;font-weight:700;font-size:11px;padding:7px 20px;border-radius:20px;letter-spacing:1px;}
+
+/* ACESSO RÁPIDO */
+.ar{background:#fff;padding:12px 14px;border-bottom:3px solid #e0e0e0;}
+.ar h3{font-family:'Oswald',sans-serif;font-size:10px;color:#999;letter-spacing:2px;text-transform:uppercase;margin-bottom:9px;}
+.argrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+@media(min-width:480px){.argrid{grid-template-columns:repeat(8,1fr);}}
+.ari{display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 3px;border-radius:8px;cursor:pointer;transition:background .2s;}
+.ari:hover{background:#f0f5ff;}
+.ariico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;}
+.ari span{font-size:9px;font-weight:700;color:#555;text-align:center;line-height:1.3;}
+
+/* LAYOUT PRINCIPAL */
+.wrap{max-width:1100px;margin:0 auto;}
+.grid{display:grid;grid-template-columns:1fr;gap:0;}
+@media(min-width:700px){.grid{grid-template-columns:2fr 1fr;}}
+.col-main{padding:14px;}
+.col-side{padding:14px;border-left:1px solid #ddd;display:flex;flex-direction:column;gap:12px;}
+
+/* SH — SECTION HEADER */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:6px;border-bottom:3px solid;}
+.sh h2{font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.sh a{font-size:10px;color:#1565c0;font-weight:700;}
+
+/* NOTÍCIA DESTAQUE */
+.feat{background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.08);margin-bottom:14px;cursor:pointer;transition:box-shadow .2s;}
+.feat:hover{box-shadow:0 5px 20px rgba(0,0,0,.13);}
+.feat-img{height:175px;display:flex;align-items:center;justify-content:center;position:relative;}
+.feat-img .fbadge{position:absolute;top:10px;left:10px;background:#c62828;color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:3px;letter-spacing:1.5px;}
+.feat-img i{font-size:50px;opacity:.15;color:#fff;}
+.feat-img .fover{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.82));padding:22px 14px 10px;}
+.feat-img .fover h2{font-family:'Oswald',sans-serif;font-size:17px;color:#fff;line-height:1.3;}
+.feat-body{padding:10px 14px 12px;}
+.feat-body p{font-size:13px;color:#555;line-height:1.65;}
+.fquote{border-left:4px solid #c62828;background:#fff8f8;padding:9px 13px;margin:10px 0;font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:#c62828;line-height:1.5;font-style:italic;}
+.fmeta{display:flex;gap:7px;margin-top:8px;font-size:10px;color:#aaa;align-items:center;flex-wrap:wrap;}
+.fcat{padding:2px 7px;border-radius:10px;font-weight:700;font-size:9px;}
+.fby{font-size:10px;color:#bbb;font-style:italic;}
+
+/* GRID 3 */
+.g3{display:grid;grid-template-columns:1fr;gap:9px;margin-bottom:14px;}
+@media(min-width:460px){.g3{grid-template-columns:1fr 1fr;}}
+@media(min-width:700px){.g3{grid-template-columns:1fr 1fr 1fr;}}
+.nc{background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.07);cursor:pointer;transition:transform .2s,box-shadow .2s;}
+.nc:hover{transform:translateY(-2px);box-shadow:0 5px 16px rgba(0,0,0,.12);}
+.ncimg{height:95px;display:flex;align-items:center;justify-content:center;position:relative;}
+.ncimg .ncat{position:absolute;top:8px;left:8px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;color:#fff;letter-spacing:1px;}
+.ncimg i{font-size:30px;opacity:.2;color:#fff;}
+.ncbody{padding:8px 10px 10px;}
+.ncbody h3{font-size:11px;font-weight:700;color:#222;line-height:1.45;margin-bottom:4px;}
+.ncby{font-size:9px;color:#bbb;font-style:italic;display:block;}
+
+/* CARDS LISTA */
+.cl{display:flex;flex-direction:column;gap:8px;}
+.cc{background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 1px 5px rgba(0,0,0,.07);display:flex;cursor:pointer;transition:box-shadow .2s;}
+.cc:hover{box-shadow:0 3px 12px rgba(0,0,0,.12);}
+.ccbar{width:4px;flex-shrink:0;}
+.ccbody{padding:8px 10px;flex:1;}
+.ccbody h3{font-size:11px;font-weight:700;color:#222;line-height:1.45;margin-bottom:3px;}
+.ccbody .cct{font-size:10px;color:#bbb;margin-top:3px;display:block;}
+.ccbody .ccby{font-size:9px;color:#ccc;display:block;font-style:italic;}
+
+/* CITAÇÃO CENTRAL */
+.bigq{background:#0a3d8f;padding:16px;margin:14px 0;border-radius:8px;text-align:center;}
+.bigq p{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#fff;line-height:1.6;font-style:italic;}
+.bigq p em{color:#ffd54f;font-style:normal;}
+.bigq cite{font-size:9px;color:#b3d4ff;display:block;margin-top:7px;font-style:normal;letter-spacing:2px;font-family:'Lato',sans-serif;}
+
+/* ===== BANNER INTERNO — ENTRE SEÇÕES ===== */
+.admeio{margin:14px 0;border-radius:8px;overflow:hidden;cursor:pointer;transition:transform .2s;box-shadow:0 4px 16px rgba(0,0,0,.12);}
+.admeio:hover{transform:translateY(-2px);}
+.admeio-a{background:linear-gradient(135deg,#c62828,#e53935);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-radius:8px;}
+.admeio-b{background:linear-gradient(135deg,#1b5e20,#2e7d32);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-radius:8px;}
+.admeio-c{background:linear-gradient(135deg,#e65100,#f57f17);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-radius:8px;}
+.am-left{}
+.am-tag{font-size:9px;color:rgba(255,255,255,.7);letter-spacing:2px;font-weight:700;text-transform:uppercase;display:block;margin-bottom:3px;}
+.am-title{font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:#fff;display:block;line-height:1.2;}
+.am-sub{font-size:10px;color:rgba(255,255,255,.75);display:block;margin-top:2px;}
+.am-btn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.5);color:#fff;font-size:10px;font-weight:700;padding:6px 14px;border-radius:16px;white-space:nowrap;flex-shrink:0;letter-spacing:.5px;}
+
+/* SEÇÃO TEMÁTICA HEADER */
+.sechead{border-radius:8px;padding:12px 14px 10px;margin-bottom:12px;margin-top:4px;}
+.sechead h2{font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:1px;}
+.sechead p{font-size:11px;color:rgba(255,255,255,.7);margin-top:3px;}
+.secline{height:3px;background:linear-gradient(90deg,#ffd54f,transparent);border-radius:2px;margin-top:8px;}
+
+/* O NORTE EM AÇÃO */
+.nacao{background:#f9fafb;padding:14px;border-radius:8px;margin-bottom:14px;}
+.ng{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.ni{background:#fff;border-radius:8px;padding:10px 11px;box-shadow:0 1px 5px rgba(0,0,0,.07);}
+.ni .nc2{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;display:block;}
+.ni h3{font-size:11px;font-weight:700;color:#222;line-height:1.4;margin-bottom:4px;}
+.ni p{font-size:10px;color:#666;line-height:1.5;}
+.ni .nby{font-size:9px;color:#ccc;margin-top:5px;display:block;font-style:italic;}
+
+/* EXPEDIENTE */
+.exped{background:#0a3d8f;padding:14px;border-radius:8px;margin-top:4px;}
+.exped h3{font-family:'Oswald',sans-serif;font-size:13px;color:#ffd54f;margin-bottom:10px;letter-spacing:1px;}
+.expgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(min-width:480px){.expgrid{grid-template-columns:repeat(3,1fr);}}
+.expi h4{font-size:9px;color:#ffd54f;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+.expi p{font-size:10px;color:#b3d4ff;line-height:1.5;}
+
+/* SIDEBAR */
+.sbox{background:#fff;border-radius:8px;padding:11px;box-shadow:0 1px 5px rgba(0,0,0,.07);}
+
+/* ===== BANNERS LATERAIS — PREMIUM ===== */
+.adlat{border-radius:10px;padding:14px 12px;text-align:center;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 16px rgba(0,0,0,.15);}
+.adlat:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.2);}
+.adlat-label{font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:2px;display:block;margin-bottom:2px;text-transform:uppercase;}
+.adlat-pub{font-size:8px;opacity:.6;display:block;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase;}
+.adlat-size{font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;display:block;line-height:1;margin:4px 0 2px;}
+.adlat-btn{display:inline-block;font-size:10px;font-weight:700;padding:5px 14px;border-radius:20px;margin-top:8px;letter-spacing:.5px;}
+.adlat-price{font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;display:block;margin:4px 0 2px;}
+
+/* MAIS LIDAS */
+.ri{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:.5px solid #f5f5f5;}
+.ri:last-child{border-bottom:none;padding-bottom:0;}
+.rn{font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;line-height:1;flex-shrink:0;min-width:22px;}
+.ri p{font-size:11px;color:#333;line-height:1.45;font-weight:700;}
+.ri small{font-size:9px;color:#aaa;display:block;margin-top:2px;font-style:italic;}
+
+/* CTA ANÚNCIO */
+.adcta{background:linear-gradient(135deg,#1565c0,#0a3d8f);padding:18px 16px;text-align:center;}
+.adcta h3{font-family:'Oswald',sans-serif;font-size:16px;color:#ffd54f;margin-bottom:5px;}
+.adcta p{font-size:11px;color:#b3d4ff;margin-bottom:12px;}
+.prrow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:12px;}
+.pb{background:rgba(255,255,255,.1);border-radius:8px;padding:10px 12px;text-align:center;min-width:88px;}
+.pb.d{background:rgba(255,213,74,.15);border:1px solid rgba(255,213,74,.4);}
+.pb .pn{font-size:9px;color:#fff;font-weight:700;margin-bottom:3px;display:block;}
+.pb .pr{font-family:'Oswald',sans-serif;font-size:19px;color:#ffd54f;font-weight:700;display:block;line-height:1;}
+.pb small{font-size:9px;color:#b3d4ff;display:block;margin-top:2px;}
+.wbtn{display:inline-flex;align-items:center;gap:6px;background:#25d366;color:#fff;padding:8px 20px;border-radius:20px;font-weight:700;font-size:12px;}
+
+/* FOOTER */
+footer{background:#111;color:#777;text-align:center;padding:20px 16px;}
+footer strong{color:#ffd54f;display:block;font-family:'Oswald',sans-serif;font-size:15px;margin-bottom:3px;}
+footer p{font-size:11px;line-height:1.7;}
+.fnav{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.fnav a{color:#555;font-size:11px;}
+.fnav a:hover{color:#ffd54f;}
+
+/* FLOAT WPP */
+.wfloat{position:fixed;bottom:20px;right:20px;background:#25d366;color:#fff;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 15px rgba(37,211,102,.5);z-index:500;transition:transform .2s;}
+.wfloat:hover{transform:scale(1.1);}
+
+/* BG HELPERS */
+.b-pol{background:linear-gradient(135deg,#4a148c,#6a1b9a);}
+.b-sau{background:linear-gradient(135deg,#b71c1c,#e53935);}
+.b-esp{background:linear-gradient(135deg,#e65100,#f57f17);}
+.b-eco{background:linear-gradient(135deg,#1a237e,#1565c0);}
+.b-cul{background:linear-gradient(135deg,#004d40,#00897b);}
+.b-sf{background:linear-gradient(135deg,#01579b,#0288d1);}
+.b-tec{background:linear-gradient(135deg,#37474f,#546e7a);}
+.b-edu{background:linear-gradient(135deg,#1b5e20,#2e7d32);}
+.b-dif{background:linear-gradient(135deg,#2e7d32,#388e3c);}
+</style>
+</head>
+<body>
+
+<!-- OVERLAY + MENU LATERAL -->
+<div class="overlay" id="ov" onclick="cm()"></div>
+<div class="sidemenu" id="sm">
+  <div class="mh">
+    <div class="mh-logo">JORNAL DO NORTE BAHIANO<small>— A VERDADE DO POVO —</small></div>
+    <button class="mh-x" onclick="cm()">×</button>
+  </div>
+  <div class="ms"><input type="text" placeholder="Buscar notícias...">🔍</div>
+  <ul class="mnav">
+    <li><a href="#" class="on">Início</a></li>
+    <li><a href="#">Norte Bahiano <span style="color:#ccc">›</span></a></li>
+    <li><a href="#">Vale do São Francisco <span style="color:#ccc">›</span></a></li>
+    <li><a href="#">Política <span style="color:#ccc">›</span></a></li>
+    <li><a href="#">Saúde</a></li>
+    <li><a href="#">Educação</a></li>
+    <li><a href="#">Esportes <span style="color:#ccc">›</span></a></li>
+    <li><a href="#">Economia</a></li>
+    <li><a href="#">Meio Ambiente</a></li>
+    <li><a href="#">Cultura & Eventos <span style="color:#ccc">›</span></a></li>
+    <li><a href="#">Tecnologia</a></li>
+    <li><a href="#">Municípios <span style="color:#ccc">›</span></a></li>
+    <li><a href="#">Grandes Reportagens</a></li>
+    <li><a href="#">Opinião</a></li>
+    <li><a href="#anuncie" class="red" onclick="cm()">📢 Anuncie Aqui</a></li>
+  </ul>
+  <div class="msoc">
+    <a href="#">📘</a>
+    <a href="#">📸</a>
+    <a href="#">▶️</a>
+    <a href="https://wa.me/5575991771095" style="color:#25d366">💬</a>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="topbar">
+    <span id="dh">Paulo Afonso, Bahia · Ano 1 · Ed. 1</span>
+    <div class="ts">
+      <a href="#">📘</a>
+      <a href="#">📸</a>
+      <a href="https://wa.me/5575991771095">💬</a>
+    </div>
+  </div>
+  <div class="hbar">
+    <button class="hbtn" onclick="om()" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="logo">
+      <h1>JORNAL DO NORTE BAHIANO</h1>
+      <p>A Verdade do Povo · Vale do São Francisco</p>
+    </div>
+    <div class="hicons">
+      <a href="#">🔍</a>
+      <a href="https://wa.me/5575991771095">💬</a>
+    </div>
+  </div>
+  <nav class="hnav">
+    <a href="#" class="on">Início</a>
+    <a href="#">Norte Bahiano</a>
+    <a href="#">São Francisco</a>
+    <a href="#">Política</a>
+    <a href="#">Saúde</a>
+    <a href="#">Esportes</a>
+    <a href="#">Economia</a>
+    <a href="#">Cultura</a>
+    <a href="#">Tecnologia</a>
+    <a href="#anuncie">Anuncie</a>
+  </nav>
+</header>
+
+<!-- BREAKING -->
+<div class="brk">
+  <div class="blab">URGENTE</div>
+  <div class="tkw"><div class="tk">
+    <span>Paulo Afonso conquista 1º lugar na Bahia em Cidades Mais Inteligentes do Governo Federal</span>
+    <span>Novas máquinas chegam para reforçar infraestrutura urbana de Paulo Afonso</span>
+    <span>São Pedro do BTN reúne milhares e consolida festejos juninos da cidade</span>
+    <span>Moto Paulo Afonso 2026 movimenta mais de R$13 milhões na economia local</span>
+    <span>📢 Anuncie aqui · (75) 99177-1095</span>
+  </div></div>
+</div>
+
+<!-- SLIDER -->
+<div class="slwrap">
+  <div class="slbox" id="sl">
+    <div class="sld on">
+      <a href="https://pauloafonso.ba.gov.br/usf-pedro-alvares-cabral-e-entregue-totalmente-requalificada-marcando-novo-momento-da-saude-de-paulo-afonso/" target="_blank">
+      <img src="https://pauloafonso.ba.gov.br/wp-content/uploads/elementor/thumbs/capa_materia_pmpa_2026_-96-rqjpaunkw7f97119zggculnjvopqdkcwl18en39tuq.jpg" style="width:100%;height:195px;object-fit:cover;display:block;" alt="USF Pedro Álvares Cabral">
+      </a>
+      <span class="slbadge">1/4</span>
+      <div class="slover"><span class="slcat">SAÚDE</span><h2>USF Pedro Álvares Cabral é entregue totalmente requalificada em Paulo Afonso</h2><small>Prefeito Mário Galinho entrega unidade reformada marcando novo momento da saúde no município.</small></div>
+    </div>
+    <div class="sld">
+      <a href="https://pauloafonso.ba.gov.br/concurso-comida-de-boteco-movimenta-setor-de-bares-e-envolve-publico-grande-final-acontece-no-dia-24/" target="_blank">
+      <img src="https://pauloafonso.ba.gov.br/wp-content/uploads/elementor/thumbs/capa_materia_pmpa_2026_-94-rqjksiwyn77m7atmusgrr2aur6ss3axnxleq1tyeea.jpg" style="width:100%;height:195px;object-fit:cover;display:block;" alt="Comida de Boteco">
+      </a>
+      <span class="slbadge">2/4</span>
+      <div class="slover"><span class="slcat">GASTRONOMIA</span><h2>Concurso Comida de Boteco movimenta setor de bares — grande final dia 24</h2><small>Evento reúne público e bares em uma verdadeira experiência gastronômica em Paulo Afonso.</small></div>
+    </div>
+    <div class="sld">
+      <a href="https://pauloafonso.ba.gov.br/seminario-de-integracao-regional-fortalece-articulacao-entre-orgaos-de-seguranca-e-defesa-civil/" target="_blank">
+      <img src="https://pauloafonso.ba.gov.br/wp-content/uploads/elementor/thumbs/capa_materia_pmpa_2026_-93-rqhxcwuhti8qhiqaoxiv1zk7u8oguetifhrlh6dpwi.jpg" style="width:100%;height:195px;object-fit:cover;display:block;" alt="Seminário Defesa Civil">
+      </a>
+      <span class="slbadge">3/4</span>
+      <div class="slover"><span class="slcat">SEGURANÇA</span><h2>Seminário de Integração Regional fortalece articulação entre órgãos de segurança</h2><small>Defesa Civil de Paulo Afonso participa de evento regional de integração e capacitação.</small></div>
+    </div>
+    <div class="sld">
+      <a href="https://pauloafonso.ba.gov.br/paulo-afonso-fortalece-ecossistema-de-inovacao-com-inicio-das-atividades-do-ncti-no-ifba/" target="_blank">
+      <img src="https://pauloafonso.ba.gov.br/wp-content/uploads/elementor/thumbs/capa_materia_pmpa_2026_-92-rqhpac0n2agnd6t8gtrtqtbct2wkaw8qt9gvkr83fm.jpg" style="width:100%;height:195px;object-fit:cover;display:block;" alt="NCTI IFBA">
+      </a>
+      <span class="slbadge">4/4</span>
+      <div class="slover"><span class="slcat">INOVAÇÃO</span><h2>Paulo Afonso fortalece ecossistema de inovação com NCTI no IFBA</h2><small>Parceria entre Prefeitura e IFBA reforça compromisso com ciência e tecnologia no município.</small></div>
+    </div>
+    <div class="slarr">
+      <button class="sarr" onclick="ps()">‹</button>
+      <button class="sarr" onclick="ns()">›</button>
+    </div>
+  </div>
+  <div class="slnav" id="sn">
+    <div class="sldot on" onclick="gs(0)"></div>
+    <div class="sldot" onclick="gs(1)"></div>
+    <div class="sldot" onclick="gs(2)"></div>
+    <div class="sldot" onclick="gs(3)"></div>
+  </div>
+</div>
+
+<!-- ===== BANNER PUBLICITÁRIO TOPO ===== -->
+<div class="adtopo" onclick="location.href='#anuncie'">
+  <div class="adtopo-inner">
+    <span class="adbig">ANUNCIE NO JORNAL DO NORTE BAHIANO</span>
+    <span class="adsub">Alcance diário de milhares de leitores do Vale do São Francisco e Norte da Bahia</span>
+    <span class="adbtn">💬 FALAR NO WHATSAPP AGORA</span>
+  </div>
+</div>
+
+<!-- ACESSO RÁPIDO -->
+<div class="ar">
+  <h3>Acesso Rápido</h3>
+  <div class="argrid">
+    <div class="ari"><div class="ariico" style="background:#e3f2fd;font-size:20px;">📰</div><span>Notícias</span></div>
+    <div class="ari"><div class="ariico" style="background:#fce4ec;font-size:20px;">🏥</div><span>Saúde</span></div>
+    <div class="ari"><div class="ariico" style="background:#f3e5f5;font-size:20px;">🏛️</div><span>Política</span></div>
+    <div class="ari"><div class="ariico" style="background:#e8f5e9;font-size:20px;">🌿</div><span>Meio Amb.</span></div>
+    <div class="ari"><div class="ariico" style="background:#fff8e1;font-size:20px;">⚽</div><span>Esportes</span></div>
+    <div class="ari"><div class="ariico" style="background:#e0f7fa;font-size:20px;">🎓</div><span>Educação</span></div>
+    <div class="ari"><div class="ariico" style="background:#fff3e0;font-size:20px;">💼</div><span>Economia</span></div>
+    <div class="ari" onclick="location.href='#anuncie'"><div class="ariico" style="background:#fce4ec;font-size:20px;">📢</div><span>Anuncie</span></div>
+  </div>
+</div>
+
+<!-- GRID PRINCIPAL -->
+<div class="wrap">
+<div class="grid">
+
+<!-- COLUNA PRINCIPAL -->
+<div class="col-main">
+
+  <!-- DESTAQUES -->
+  <div class="sh" style="border-color:#c62828;"><h2 style="color:#c62828;">Destaques</h2><a href="#">Ver todas ›</a></div>
+
+  <div class="feat">
+    <a href="https://pauloafonso.ba.gov.br/usf-pedro-alvares-cabral-e-entregue-totalmente-requalificada-marcando-novo-momento-da-saude-de-paulo-afonso/" target="_blank">
+    <div class="feat-img" style="background:#000;padding:0;">
+      <span class="fbadge">DESTAQUE</span>
+      <img src="https://pauloafonso.ba.gov.br/wp-content/uploads/elementor/thumbs/capa_materia_pmpa_2026_-96-rqjpaunkw7f97119zggculnjvopqdkcwl18en39tuq.jpg" style="width:100%;height:175px;object-fit:cover;display:block;opacity:.88;" alt="USF requalificada">
+      <div class="fover"><h2>USF Pedro Álvares Cabral é entregue totalmente requalificada marcando novo momento da saúde de Paulo Afonso</h2></div>
+    </div>
+    </a>
+    <div class="feat-body">
+      <p>A população de Paulo Afonso celebrou um marco na Atenção Básica. Na quinta-feira (16/07), o Prefeito Mário Galinho entregou a unidade completamente reformada, com estrutura moderna e equipamentos novos para atender a comunidade local.</p>
+      <div class="fquote">"Saúde é prioridade desta gestão. Cada unidade requalificada representa mais dignidade e cuidado para o nosso povo."</div>
+      <div class="fmeta"><span class="fcat" style="background:#fce4ec;color:#c62828;">Saúde</span><span class="fby" id="dn">17/07/2026 · Redação JNB · Fonte: PMPA</span></div>
+    </div>
+  </div>
+
+  <div class="g3">
+    <div class="nc">
+      <a href="https://pauloafonso.ba.gov.br/concurso-comida-de-boteco-movimenta-setor-de-bares-e-envolve-publico-grande-final-acontece-no-dia-24/" target="_blank">
+      <div class="ncimg" style="background:#000;padding:0;">
+        <span class="ncat" style="background:#e65100;">Gastronomia</span>
+        <img src="https://pauloafonso.ba.gov.br/wp-content/uploads/elementor/thumbs/capa_materia_pmpa_2026_-94-rqjksiwyn77m7atmusgrr2aur6ss3axnxleq1tyeea.jpg" style="width:100%;height:95px;object-fit:cover;display:block;" alt="Comida de Boteco">
+      </div>
+      </a>
+      <div class="ncbody"><h3>Concurso Comida de Boteco — grande final dia 24 de julho em Paulo Afonso</h3><span class="ncby">Redação JNB · 17/07/2026</span></div>
+    </div>
+    <div class="nc">
+      <a href="https://pauloafonso.ba.gov.br/seminario-de-integracao-regional-fortalece-articulacao-entre-orgaos-de-seguranca-e-defesa-civil/" target="_blank">
+      <div class="ncimg" style="background:#000;padding:0;">
+        <span class="ncat" style="background:#37474f;">Segurança</span>
+        <img src="https://pauloafonso.ba.gov.br/wp-content/uploads/elementor/thumbs/capa_materia_pmpa_2026_-93-rqhxcwuhti8qhiqaoxiv1zk7u8oguetifhrlh6dpwi.jpg" style="width:100%;height:95px;object-fit:cover;display:block;" alt="Seminário Defesa Civil">
+      </div>
+      </a>
+      <div class="ncbody"><h3>Seminário de Integração Regional fortalece órgãos de segurança e Defesa Civil</h3><span class="ncby">Redação JNB · 16/07/2026</span></div>
+    </div>
+    <div class="nc">
+      <a href="https://pauloafonso.ba.gov.br/paulo-afonso-fortalece-ecossistema-de-inovacao-com-inicio-das-atividades-do-ncti-no-ifba/" target="_blank">
+      <div class="ncimg" style="background:#000;padding:0;">
+        <span class="ncat" style="background:#1565c0;">Inovação</span>
+        <img src="https://pauloafonso.ba.gov.br/wp-content/uploads/elementor/thumbs/capa_materia_pmpa_2026_-92-rqhpac0n2agnd6t8gtrtqtbct2wkaw8qt9gvkr83fm.jpg" style="width:100%;height:95px;object-fit:cover;display:block;" alt="NCTI IFBA">
+      </div>
+      </a>
+      <div class="ncbody"><h3>Paulo Afonso fortalece ecossistema de inovação com NCTI no IFBA</h3><span class="ncby">Redação JNB · 16/07/2026</span></div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO EMPREGO -->
+  <div class="sechead" style="background:linear-gradient(135deg,#1b5e20,#2e7d32);border-radius:8px;margin-bottom:12px;margin-top:14px;">
+    <h2>💼 Emprego & Oportunidades</h2>
+    <p>Vagas, concursos e oportunidades de trabalho no Norte da Bahia</p>
+    <div class="secline"></div>
+  </div>
+
+  <div class="g3" style="margin-bottom:14px;">
+    <div class="nc">
+      <div class="ncimg" style="background:linear-gradient(135deg,#1b5e20,#2e7d32);">
+        <span class="ncat" style="background:#1b5e20;">Concurso</span>
+        <span style="font-size:36px;">📋</span>
+      </div>
+      <div class="ncbody">
+        <h3>Prefeitura de Paulo Afonso abre concurso público com quase 3 mil vagas</h3>
+        <span class="ncby">Emprego · Hoje</span>
+      </div>
+    </div>
+    <div class="nc">
+      <div class="ncimg" style="background:linear-gradient(135deg,#004d40,#00695c);">
+        <span class="ncat" style="background:#004d40;">CLT</span>
+        <span style="font-size:36px;">🏭</span>
+      </div>
+      <div class="ncbody">
+        <h3>Empresa do polo industrial de Paulo Afonso seleciona operadores de produção</h3>
+        <span class="ncby">Emprego · Hoje</span>
+      </div>
+    </div>
+    <div class="nc">
+      <div class="ncimg" style="background:linear-gradient(135deg,#e65100,#f57f17);">
+        <span class="ncat" style="background:#e65100;">SINE</span>
+        <span style="font-size:36px;">🤝</span>
+      </div>
+      <div class="ncbody">
+        <h3>SINE de Paulo Afonso oferece mais de 80 vagas para diversas áreas esta semana</h3>
+        <span class="ncby">Emprego · Hoje</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD LISTA EMPREGO -->
+  <div class="cl" style="margin-bottom:16px;">
+    <div class="cc">
+      <div class="ccbar" style="background:#2e7d32;"></div>
+      <div class="ccbody">
+        <h3>CHESF abre processo seletivo para técnicos e engenheiros em Paulo Afonso</h3>
+        <span class="cct">Concurso · <strong style="color:#2e7d32;">Emprego</strong></span>
+        <span class="ccby">Redação JNB</span>
+      </div>
+    </div>
+    <div class="cc">
+      <div class="ccbar" style="background:#2e7d32;"></div>
+      <div class="ccbody">
+        <h3>Senai oferece cursos gratuitos de qualificação profissional em Paulo Afonso</h3>
+        <span class="cct">Qualificação · <strong style="color:#2e7d32;">Emprego</strong></span>
+        <span class="ccby">Redação JNB</span>
+      </div>
+    </div>
+    <div class="cc">
+      <div class="ccbar" style="background:#2e7d32;"></div>
+      <div class="ccbody">
+        <h3>Comércio de Paulo Afonso contrata para o Natal com 200 vagas temporárias</h3>
+        <span class="cct">Temporário · <strong style="color:#2e7d32;">Emprego</strong></span>
+        <span class="ccby">Redação JNB</span>
+      </div>
+    </div>
+    <div class="cc">
+      <div class="ccbar" style="background:#1565c0;"></div>
+      <div class="ccbody">
+        <h3>Tem vaga? Envie para a redação do JNB e divulgamos gratuitamente!</h3>
+        <span class="cct">💬 (75) 99177-1095 · <strong style="color:#1565c0;">WhatsApp</strong></span>
+        <span class="ccby">Redação JNB</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BANNER ENTRE SEÇÕES — VERMELHO -->
+  <div class="admeio" onclick="location.href='#anuncie'">
+    <div class="admeio-a">
+      <div class="am-left">
+        <span class="am-tag">Publicidade</span>
+        <span class="am-title">SUA EMPRESA AQUI</span>
+        <span class="am-sub">Banner 728×90 · Plano Básico a partir de R$99/mês</span>
+      </div>
+      <span class="am-btn">ANUNCIAR →</span>
+    </div>
+  </div>
+
+  <!-- ÚLTIMAS -->
+  <div class="sh" style="border-color:#1565c0;margin-top:4px;"><h2 style="color:#1565c0;">Últimas Notícias</h2><a href="#">Ver todas ›</a></div>
+  <div class="cl" style="margin-bottom:16px;">
+    <div class="cc"><div class="ccbar" style="background:#e53935;"></div><div class="ccbody"><h3><a href="https://pauloafonso.ba.gov.br/usf-pedro-alvares-cabral-e-entregue-totalmente-requalificada-marcando-novo-momento-da-saude-de-paulo-afonso/" target="_blank">USF Pedro Álvares Cabral é entregue totalmente requalificada em Paulo Afonso</a></h3><span class="cct">17/07 · <strong style="color:#e53935;">Saúde</strong></span><span class="ccby">Fonte: PMPA</span></div></div>
+    <div class="cc"><div class="ccbar" style="background:#f57f17;"></div><div class="ccbody"><h3><a href="https://pauloafonso.ba.gov.br/concurso-comida-de-boteco-movimenta-setor-de-bares-e-envolve-publico-grande-final-acontece-no-dia-24/" target="_blank">Concurso Comida de Boteco movimenta bares — grande final dia 24 de julho</a></h3><span class="cct">17/07 · <strong style="color:#f57f17;">Gastronomia</strong></span><span class="ccby">Fonte: PMPA</span></div></div>
+    <div class="cc"><div class="ccbar" style="background:#546e7a;"></div><div class="ccbody"><h3><a href="https://pauloafonso.ba.gov.br/seminario-de-integracao-regional-fortalece-articulacao-entre-orgaos-de-seguranca-e-defesa-civil/" target="_blank">Seminário de Integração Regional fortalece articulação de segurança e Defesa Civil</a></h3><span class="cct">16/07 · <strong style="color:#546e7a;">Segurança</strong></span><span class="ccby">Fonte: PMPA</span></div></div>
+    <div class="cc"><div class="ccbar" style="background:#1565c0;"></div><div class="ccbody"><h3><a href="https://pauloafonso.ba.gov.br/paulo-afonso-fortalece-ecossistema-de-inovacao-com-inicio-das-atividades-do-ncti-no-ifba/" target="_blank">Paulo Afonso fortalece ecossistema de inovação com início das atividades do NCTI no IFBA</a></h3><span class="cct">16/07 · <strong style="color:#1565c0;">Inovação</strong></span><span class="ccby">Fonte: PMPA</span></div></div>
+    <div class="cc"><div class="ccbar" style="background:#c62828;"></div><div class="ccbody"><h3><a href="https://pauloafonso.ba.gov.br/prefeitura-anuncia-primeiras-atracoes-da-copa-vela-2026-e-aumenta-a-expectativa-para-a-maior-micareta-da-regiao/" target="_blank">Prefeitura anuncia primeiras atrações da Copa Vela 2026 — maior festival da região</a></h3><span class="cct">14/07 · <strong style="color:#c62828;">Eventos</strong></span><span class="ccby">Fonte: PMPA</span></div></div>
+    <div class="cc"><div class="ccbar" style="background:#2e7d32;"></div><div class="ccbody"><h3><a href="https://pauloafonso.ba.gov.br/file-de-tilapia-passa-a-fazer-da-alimentacao-escolar-com-o-programa-dos-canions-para-a-merenda-produtores-do-xingozinho-conquistam-certificacao-para-comercializar-nacionalmente-producao/" target="_blank">Filé de tilápia do Xingozinho entra na merenda escolar — produtores conquistam certificação nacional</a></h3><span class="cct">13/07 · <strong style="color:#2e7d32;">Educação</strong></span><span class="ccby">Fonte: PMPA</span></div></div>
+    <div class="cc"><div class="ccbar" style="background:#6a1b9a;"></div><div class="ccbody"><h3><a href="https://pauloafonso.ba.gov.br/com-anuncio-de-investimentos-e-mutirao-no-pa4-gestao-municipal-lanca-o-programa-avanca-paulo-afonso/" target="_blank">Com mutirão no PA4, gestão municipal lança o programa 'Avança Paulo Afonso'</a></h3><span class="cct">13/07 · <strong style="color:#6a1b9a;">Governo</strong></span><span class="ccby">Fonte: PMPA</span></div></div>
+  </div>
+
+  <!-- CITAÇÃO GRANDE -->
+  <div class="bigq">
+    <p>"O Norte Bahiano tem história, tem gente, tem força. <em>Tem A Verdade do Povo.</em>"</p>
+    <cite>JORNAL DO NORTE BAHIANO · PAULO AFONSO, BAHIA · ANO 1</cite>
+  </div>
+
+  <!-- O NORTE EM AÇÃO -->
+  <div class="sechead b-dif" style="margin-top:14px;">
+    <h2>O Norte em Ação</h2>
+    <p>Notícias dos municípios do Norte da Bahia e Vale do São Francisco</p>
+    <div class="secline"></div>
+  </div>
+  <div class="nacao">
+    <div class="ng">
+      <div class="ni"><span class="nc2" style="color:#2e7d32;">Paulo Afonso</span><h3>Prefeitura lança programa de cisternas para famílias rurais</h3><p>Ação beneficia 200 famílias da zona rural com acesso à água potável durante a seca.</p><span class="nby">Redação JNB</span></div>
+      <div class="ni"><span class="nc2" style="color:#1565c0;">Glória</span><h3>Município inaugura nova escola de ensino fundamental com 400 vagas</h3><p>Unidade conta com laboratório de informática e sala de recursos multifuncionais.</p><span class="nby">Redação JNB</span></div>
+      <div class="ni"><span class="nc2" style="color:#c62828;">Rodelas</span><h3>Comunidade Tuxá ganha centro cultural próprio na beira do São Francisco</h3><p>Espaço preserva tradições indígenas e abre caminho para o turismo étnico regional.</p><span class="nby">Redação JNB</span></div>
+      <div class="ni"><span class="nc2" style="color:#f57f17;">Juazeiro</span><h3>Porto de Juazeiro amplia movimento de cargas no Rio São Francisco em 18%</h3><p>Crescimento no primeiro semestre impulsiona a economia da região.</p><span class="nby">Redação JNB</span></div>
+      <div class="ni"><span class="nc2" style="color:#6a1b9a;">Chico Lomanto</span><h3>Feira agroecológica reúne produtores e movimenta R$80 mil no município</h3><p>Evento mensal valoriza a agricultura familiar e produtos orgânicos locais.</p><span class="nby">Redação JNB</span></div>
+      <div class="ni"><span class="nc2" style="color:#00695c;">Macururé</span><h3>Projeto de piscicultura gera renda para famílias ribeirinhas do São Francisco</h3><p>Iniciativa estadual capacita 50 famílias na criação sustentável de tilápia.</p><span class="nby">Redação JNB</span></div>
+    </div>
+  </div>
+
+  <!-- BANNER ENTRE SEÇÕES — VERDE -->
+  <div class="admeio" onclick="location.href='#anuncie'">
+    <div class="admeio-b">
+      <div class="am-left">
+        <span class="am-tag">Publicidade</span>
+        <span class="am-title">ESPAÇO DISPONÍVEL</span>
+        <span class="am-sub">Anuncie seu negócio para o povo do Norte Bahiano · (75) 99177-1095</span>
+      </div>
+      <span class="am-btn">CONTRATAR →</span>
+    </div>
+  </div>
+
+  <!-- VALE DO SÃO FRANCISCO -->
+  <div class="sechead b-sf">
+    <h2>Vale do São Francisco</h2>
+    <p>Turismo, pesca, agronegócio e natureza do grande rio do sertão</p>
+    <div class="secline"></div>
+  </div>
+  <div class="g3" style="margin-top:4px;">
+    <div class="nc"><div class="ncimg b-sf"><span class="ncat" style="background:#01579b;">Turismo</span>⛵</div><div class="ncbody"><h3>Lago de Sobradinho bate recorde de visitantes no primeiro semestre de 2026</h3><span class="ncby">Redação JNB · Jun/2026</span></div></div>
+    <div class="nc"><div class="ncimg b-cul"><span class="ncat" style="background:#00695c;">Pesca</span>🐟</div><div class="ncbody"><h3>Pesca artesanal no São Francisco recebe projeto federal de preservação</h3><span class="ncby">Redação JNB · Jun/2026</span></div></div>
+    <div class="nc"><div class="ncimg b-edu"><span class="ncat" style="background:#1b5e20;">Agro</span>🌾</div><div class="ncbody"><h3>Produtores comemoram safra recorde de manga e uva no Vale em 2026</h3><span class="ncby">Redação JNB · Jun/2026</span></div></div>
+  </div>
+
+  <!-- BANNER ENTRE SEÇÕES — LARANJA -->
+  <div class="admeio" style="margin-top:14px;" onclick="location.href='#anuncie'">
+    <div class="admeio-c">
+      <div class="am-left">
+        <span class="am-tag">Publicidade · Plano Profissional</span>
+        <span class="am-title">ANUNCIE E VENDA MAIS</span>
+        <span class="am-sub">Banner no site + Posts no Instagram + Nota semanal · R$199/mês</span>
+      </div>
+      <span class="am-btn">SAIBA MAIS →</span>
+    </div>
+  </div>
+
+  <!-- EXPEDIENTE -->
+  <div class="exped" style="margin-top:14px;">
+    <h3>EXPEDIENTE</h3>
+    <div class="expgrid">
+      <div class="expi"><h4>Diretor</h4><p>Ricardo<br>Digital Chevalier Card</p></div>
+      <div class="expi"><h4>Redação</h4><p>Paulo Afonso, Bahia<br>(75) 99177-1095</p></div>
+      <div class="expi"><h4>Equipe Digital</h4><p>Claude Jornalista<br>Claude Designer<br>Claude Social Media</p></div>
+      <div class="expi"><h4>Circulação</h4><p>Norte da Bahia e<br>Vale do São Francisco</p></div>
+      <div class="expi"><h4>E-mail</h4><p>jornalnortebahiano<br>@gmail.com</p></div>
+      <div class="expi"><h4>Publicidade</h4><p>WhatsApp<br>(75) 99177-1095</p></div>
+    </div>
+  </div>
+
+</div><!-- fim col-main -->
+
+<!-- SIDEBAR -->
+<div class="col-side">
+
+  <!-- BANNER LATERAL 1 — LARANJA DESTAQUE -->
+  <div class="adlat" style="background:linear-gradient(135deg,#e65100,#ff8f00);" onclick="location.href='#anuncie'">
+    <span class="adlat-pub" style="color:rgba(255,255,255,.6);">Publicidade</span>
+    <span class="adlat-label" style="color:#fff;">Espaço Premium</span>
+    <span class="adlat-size" style="color:#fff;">300×250</span>
+    <span style="font-size:10px;color:rgba(255,255,255,.75);display:block;">Banner lateral · Visibilidade máxima</span>
+    <span class="adlat-btn" style="background:#fff;color:#e65100;">CONTRATAR AGORA</span>
+  </div>
+
+  <!-- MAIS LIDAS -->
+  <div class="sbox">
+    <div class="sh" style="border-color:#e53935;"><h2 style="color:#e53935;font-size:12px;">Mais Lidas</h2></div>
+    <div class="ri"><span class="rn" style="color:#e53935;">1</span><div><p>Paulo Afonso conquista 1º lugar na Bahia em Cidades Mais Inteligentes</p><small>Tecnologia · Hoje</small></div></div>
+    <div class="ri"><span class="rn" style="color:#1565c0;">2</span><div><p>Moto PA 2026 movimenta R$13 milhões na economia local</p><small>Economia · Jun/2026</small></div></div>
+    <div class="ri"><span class="rn" style="color:#2e7d32;">3</span><div><p>Lago de Sobradinho bate recorde de visitantes no semestre</p><small>São Francisco · Jun/2026</small></div></div>
+    <div class="ri"><span class="rn" style="color:#f57f17;">4</span><div><p>Concurso da Prefeitura registra quase 3 mil inscritos</p><small>Governo · Jun/2026</small></div></div>
+    <div class="ri"><span class="rn" style="color:#6a1b9a;">5</span><div><p>São Pedro do BTN consolida festejos juninos de Paulo Afonso</p><small>Cultura · Jun/2026</small></div></div>
+  </div>
+
+  <!-- POLÍTICA -->
+  <div class="sbox">
+    <div class="sh" style="border-color:#6a1b9a;"><h2 style="color:#6a1b9a;font-size:12px;">Política Local</h2></div>
+    <div class="cl">
+      <div class="cc" style="box-shadow:none;border:.5px solid #eee;"><div class="ccbar" style="background:#6a1b9a;"></div><div class="ccbody"><h3>Prefeito anuncia mudanças no secretariado municipal</h3><span class="cct">Governo · Hoje</span></div></div>
+      <div class="cc" style="box-shadow:none;border:.5px solid #eee;"><div class="ccbar" style="background:#6a1b9a;"></div><div class="ccbody"><h3>Câmara vota plano de mobilidade urbana esta semana</h3><span class="cct">Câmara · Ontem</span></div></div>
+      <div class="cc" style="box-shadow:none;border:.5px solid #eee;"><div class="ccbar" style="background:#6a1b9a;"></div><div class="ccbody"><h3>Prefeitura alerta para vencimento da cota única da TFF em julho</h3><span class="cct">SEFAZ · 25/06</span></div></div>
+    </div>
+  </div>
+
+  <!-- BANNER LATERAL 2 — ESCURO DOURADO -->
+  <div class="adlat" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);" onclick="location.href='#anuncie'">
+    <span class="adlat-pub" style="color:rgba(255,213,74,.5);">Publicidade</span>
+    <span class="adlat-label" style="color:#ffd54f;">Sua Marca Aqui</span>
+    <span class="adlat-price" style="color:#fff;">R$99<span style="font-size:13px;font-weight:400;">/mês</span></span>
+    <span style="font-size:10px;color:rgba(255,255,255,.55);display:block;">Plano básico · Comece agora</span>
+    <span class="adlat-btn" style="background:#ffd54f;color:#1a1a2e;">VER TODOS OS PLANOS</span>
+  </div>
+
+  <!-- SAÚDE -->
+  <div class="sbox">
+    <div class="sh" style="border-color:#e53935;"><h2 style="color:#e53935;font-size:12px;">Saúde</h2></div>
+    <div class="cl">
+      <div class="cc" style="box-shadow:none;border:.5px solid #eee;"><div class="ccbar" style="background:#e53935;"></div><div class="ccbody"><h3>Campanha de vacinação contra dengue atinge 80% da meta em Paulo Afonso</h3><span class="cct">Saúde · Hoje</span></div></div>
+      <div class="cc" style="box-shadow:none;border:.5px solid #eee;"><div class="ccbar" style="background:#e53935;"></div><div class="ccbody"><h3>Novas UBS chegam a comunidades rurais do município</h3><span class="cct">Saúde · Ontem</span></div></div>
+    </div>
+  </div>
+
+  <!-- ESPORTES -->
+  <div class="sbox">
+    <div class="sh" style="border-color:#f57f17;"><h2 style="color:#f57f17;font-size:12px;">Esportes</h2></div>
+    <div class="cl">
+      <div class="cc" style="box-shadow:none;border:.5px solid #eee;"><div class="ccbar" style="background:#f57f17;"></div><div class="ccbody"><h3>Campeonato Intermunicipal 2026 começa com 12 times inscritos</h3><span class="cct">Futebol · Hoje</span></div></div>
+      <div class="cc" style="box-shadow:none;border:.5px solid #eee;"><div class="ccbar" style="background:#f57f17;"></div><div class="ccbody"><h3>Paulo Afonso Run abre inscrições para julho com 500 atletas esperados</h3><span class="cct">Atletismo · Ontem</span></div></div>
+    </div>
+  </div>
+
+  <!-- BANNER LATERAL 3 — VERDE -->
+  <div class="adlat" style="background:linear-gradient(135deg,#1b5e20,#2e7d32);" onclick="location.href='#anuncie'">
+    <span class="adlat-pub" style="color:rgba(255,255,255,.5);">Publicidade</span>
+    <span class="adlat-label" style="color:#fff;">Anuncie Aqui</span>
+    <span class="adlat-size" style="color:#fff;">300×600</span>
+    <span style="font-size:10px;color:rgba(255,255,255,.7);display:block;">Meia página lateral</span>
+    <span class="adlat-btn" style="background:#fff;color:#1b5e20;">FALAR NO WHATSAPP</span>
+  </div>
+
+  <!-- MEIO AMBIENTE -->
+  <div class="sbox">
+    <div class="sh" style="border-color:#2e7d32;"><h2 style="color:#2e7d32;font-size:12px;">Meio Ambiente</h2></div>
+    <div class="cl">
+      <div class="cc" style="box-shadow:none;border:.5px solid #eee;"><div class="ccbar" style="background:#2e7d32;"></div><div class="ccbody"><h3>Reflorestamento recupera 12 km de margem do Rio São Francisco</h3><span class="cct">Meio Amb. · Hoje</span></div></div>
+      <div class="cc" style="box-shadow:none;border:.5px solid #eee;"><div class="ccbar" style="background:#2e7d32;"></div><div class="ccbody"><h3>CHESF anuncia manutenção programada na Usina de Paulo Afonso</h3><span class="cct">Energia · Ontem</span></div></div>
+    </div>
+  </div>
+
+</div><!-- fim sidebar -->
+</div><!-- fim grid -->
+</div><!-- fim wrap -->
+
+<!-- CTA ANÚNCIO FINAL -->
+<div class="adcta" id="anuncie">
+  <h3>ANUNCIE NO JORNAL DO NORTE BAHIANO</h3>
+  <p>Alcance milhares de leitores do Vale do São Francisco e Norte da Bahia todos os dias</p>
+  <div class="prrow">
+    <div class="pb"><span class="pn">Básico</span><span class="pr">R$99</span><small>/mês</small></div>
+    <div class="pb d"><span class="pn">⭐ Profissional</span><span class="pr">R$199</span><small>/mês</small></div>
+    <div class="pb"><span class="pn">Premium</span><span class="pr">R$399</span><small>/mês</small></div>
+  </div>
+  <a class="wbtn" href="https://wa.me/5575991771095?text=Quero+anunciar+no+Jornal+do+Norte+Bahiano">
+    💬 Falar no WhatsApp agora
+  </a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>JORNAL DO NORTE BAHIANO</strong>
+  <p>A Verdade do Povo — Paulo Afonso, Bahia &amp; Vale do São Francisco</p>
+  <p>Ano 1 · Edição 1 · <span id="df">Julho de 2026</span></p>
+  <a class="wbtn" href="https://wa.me/5575991771095" style="margin:10px auto;display:inline-flex;">
+    💬 Fale Conosco
+  </a>
+  <div class="fnav">
+    <a href="#">Início</a><a href="#">Norte Bahiano</a><a href="#">São Francisco</a>
+    <a href="#">Política</a><a href="#">Saúde</a><a href="#">Esportes</a>
+    <a href="#anuncie">Anuncie</a><a href="#">Expediente</a><a href="#">Contato</a>
+  </div>
+  <p style="margin-top:12px;font-size:10px;color:#444;">© 2026 Jornal do Norte Bahiano · Paulo Afonso, Bahia · Digital Chevalier Card · (75) 99177-1095</p>
+</footer>
+
+<a class="wfloat" href="https://wa.me/5575991771095" aria-label="WhatsApp">💬</a>
+
+<script>
+function om(){document.getElementById('sm').classList.add('open');document.getElementById('ov').classList.add('open');document.body.style.overflow='hidden';}
+function cm(){document.getElementById('sm').classList.remove('open');document.getElementById('ov').classList.remove('open');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')cm();});
+
+const dias=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+const meses=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+const n=new Date();
+document.getElementById('dh').textContent=dias[n.getDay()]+', '+n.getDate()+' de '+meses[n.getMonth()]+' de '+n.getFullYear()+' · Paulo Afonso, BA';
+document.getElementById('dn').textContent=n.toLocaleDateString('pt-BR')+' · Redação JNB';
+document.getElementById('df').textContent=meses[n.getMonth()][0].toUpperCase()+meses[n.getMonth()].slice(1)+' de '+n.getFullYear();
+
+let c=0;
+const slds=document.querySelectorAll('.sld');
+const dots=document.querySelectorAll('.sldot');
+function gs(i){slds[c].classList.remove('on');dots[c].classList.remove('on');c=i;slds[c].classList.add('on');dots[c].classList.add('on');}
+function ns(){gs((c+1)%slds.length);}
+function ps(){gs((c-1+slds.length)%slds.length);}
+setInterval(ns,5000);
+</script>
+</body>
+</html>
